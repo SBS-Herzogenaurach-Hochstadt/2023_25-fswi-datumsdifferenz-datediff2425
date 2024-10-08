@@ -19,12 +19,18 @@ public class Application {
 		root.getContentPane().setLayout(new FlowLayout(FlowLayout.LEFT,20,20));
 
 		jtfDatum1 = new JTextField(6);
-		jtfDatum2 = new JTextField(6);
+		jtfDatum1.setName("Datum1");
+		jtfDatum1.getDocument().putProperty("owner", jtfDatum1);
+		jtfDatum1.getDocument().addDocumentListener(new DateCheckEventHandler());
 		root.getContentPane().add(jtfDatum1);
+
+		jtfDatum2 = new JTextField(6);
+		jtfDatum2.setEnabled(false);
 		root.getContentPane().add(jtfDatum2);
 
 		JButton jButton = new JButton("berechne");
 		jButton.addActionListener(new ButtonEventHandler());
+		jButton.setEnabled(false);
 		root.getContentPane().add(jButton);
 
 		lblErgebnis = new JLabel("???");
