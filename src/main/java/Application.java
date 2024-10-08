@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class Application {
@@ -37,13 +38,16 @@ public class Application {
 	private static class ButtonEventHandler implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
 			try {
 				Date date1 = formatter.parse(jtfDatum1.getText());
 				Date date2 = formatter.parse(jtfDatum2.getText());
 				long diffInMillies = date2.getTime() - date1.getTime();
 				long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-				lblErgebnis.setText(String.format("%d Tage", diffInDays));
+				if (diffInDays == 1 || diffInDays == -1)
+					lblErgebnis.setText(String.format("%d Tag", diffInDays));
+				else
+					lblErgebnis.setText(String.format("%d Tage", diffInDays));
 				root.pack();
 			} catch (Exception exception) {
 				exception.printStackTrace();
