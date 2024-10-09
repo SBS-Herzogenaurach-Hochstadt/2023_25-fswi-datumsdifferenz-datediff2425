@@ -25,7 +25,10 @@ public class Application {
 		root.getContentPane().add(jtfDatum1);
 
 		jtfDatum2 = new JTextField(6);
+		jtfDatum2.setName("Datum2");
 		jtfDatum2.setEnabled(false);
+		jtfDatum2.getDocument().putProperty("owner", jtfDatum2);
+		jtfDatum2.getDocument().addDocumentListener(new DateCheckEventHandler());
 		root.getContentPane().add(jtfDatum2);
 
 		JButton jButton = new JButton("berechne");
