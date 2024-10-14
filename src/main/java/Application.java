@@ -1,14 +1,18 @@
+import de.sbs.fswi.services.DataAccessObject;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 public class Application {
 
@@ -18,6 +22,7 @@ public class Application {
 	private static JLabel lblErgebnis;
 	private static Label lastTen;
 	private static String[] listLastTen = new String [10];
+	private static DataAccessObject dao;
 
 	public static void main(String[] args) {
 		root = new JFrame("DateDiff");
@@ -57,8 +62,19 @@ public class Application {
 		lblErgebnis = new JLabel("???");
 		root.getContentPane().add(lblErgebnis);
 
-		lastTen = new Label("Sammlung");
-		//lastTen.setEditable(false);
+		lastTen = new Label();
+		dao = new DataAccessObject("C:/Users/cgg/Documents/data/datediff.txt");
+		String[][] bufLastTen = Arrays.stream(dao.findAll()).map(date -> date.split("#")).toArray(String[][]::new);
+		int countDown = 9;
+		for (int i = bufLastTen.length - 1 ; i >= 0; i--) {
+			if (i == bufLastTen.length - 1) {
+				lastTen.setText(String.format("%s - %s = %s", bufLastTen[i][0], bufLastTen[i][1], bufLastTen[i][2]));
+			}
+			if (countDown >= 0)
+				listLastTen[countDown--] = String.format("%s - %s = %s", bufLastTen[i][0], bufLastTen[i][1], bufLastTen[i][2]);
+			else
+				break;
+		}
 		lastTen.addMouseWheelListener(new ChangeLastTenEventHandler());
 		root.getContentPane().add(lastTen);
 
@@ -68,8 +84,6 @@ public class Application {
 	}
 
 	private static class ButtonEventHandler implements ActionListener {
-
-		private int counter = 0;
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
@@ -78,29 +92,37 @@ public class Application {
 				Date date2 = formatter.parse(jtfDatum2.getText());
 				long diffInMillies = date2.getTime() - date1.getTime();
 				long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+				int counter = IntStream.range(0, listLastTen.length - 1)
+						.filter(i -> listLastTen[i] == null) // Filter nach null oder leeren Arrays
+						.findFirst()
+						.orElse(10);
 				if (diffInDays == 1 || diffInDays == -1) {
 					lblErgebnis.setText(String.format("%d Tag", diffInDays));
 					if (counter < 10) {
 						listLastTen[counter++] = String.format("%s - %s = %d Tag", jtfDatum1.getText(), jtfDatum2.getText(), diffInDays);
 						lastTen.setText(listLastTen[counter - 1]);
+						dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tag", new Timestamp(System.currentTimeMillis()).toString()});
 					} else {
 						String[] buf = new String[10];
 						System.arraycopy(listLastTen,1, buf, 0, 9);
 						listLastTen = buf;
 						listLastTen[9] = String.format("%s - %s = %d Tag", jtfDatum1.getText(), jtfDatum2.getText(), diffInDays);
 						lastTen.setText(listLastTen[9]);
+						dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tag", new Timestamp(System.currentTimeMillis()).toString()});
 					}
 				} else {
 					lblErgebnis.setText(String.format("%d Tage", diffInDays));
 					if (counter < 10) {
 						listLastTen[counter++] = String.format("%s - %s = %d Tage", jtfDatum1.getText(), jtfDatum2.getText(), diffInDays);
 						lastTen.setText(listLastTen[counter - 1]);
+						dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tage", new Timestamp(System.currentTimeMillis()).toString()});
 					} else {
 						String[] buf = new String[10];
 						System.arraycopy(listLastTen,1, buf, 0, 9);
 						listLastTen = buf;
 						listLastTen[9] = String.format("%s - %s = %d Tage", jtfDatum1.getText(), jtfDatum2.getText(), diffInDays);
 						lastTen.setText(listLastTen[9]);
+						dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tage", new Timestamp(System.currentTimeMillis()).toString()});
 					}
 				}
 				root.pack();
@@ -122,6 +144,7 @@ public class Application {
 			if (index >= 0 && index < 10) {
 				if (listLastTen[index] != null)
 					lastTen.setText(listLastTen[index]);
+				root.pack();
 			}
 		}
 	}
