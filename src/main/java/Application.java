@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -13,6 +15,7 @@ public class Application {
 	private static JTextField jtfDatum1;
 	private static JTextField jtfDatum2;
 	private static JLabel lblErgebnis;
+	private static JLabel lblSammlung;
 
 	public static void main(String[] args) {
 		root = new JFrame("DateDiff");
@@ -51,9 +54,9 @@ public class Application {
 		lblErgebnis = new JLabel("???");
 		root.getContentPane().add(lblErgebnis);
 
-		JLabel sammlung = new JLabel("Sammlung");
-
-		root.getContentPane().add(sammlung);
+		lblSammlung = new JLabel("Sammlung");
+		lblSammlung.addMouseWheelListener(new ChangeLastTenEventHandler());
+		root.getContentPane().add(lblSammlung);
 
 		root.pack();
 		root.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -77,6 +80,13 @@ public class Application {
 			} catch (Exception exception) {
 				exception.printStackTrace();
 			}
+		}
+	}
+
+	private static class ChangeLastTenEventHandler implements MouseWheelListener {
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent e) {
+
 		}
 	}
 }
