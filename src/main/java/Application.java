@@ -25,7 +25,7 @@ public class Application {
 	private static DataAccessObject dao;
 
 	public static void main(String[] args) {
-		root = new JFrame("DateDiff");
+		root = new JFrame("DateDiff 0.2");
 		root.getContentPane().setLayout(new FlowLayout(FlowLayout.LEFT,20,20));
 
 		Box mainBox = Box.createVerticalBox();
