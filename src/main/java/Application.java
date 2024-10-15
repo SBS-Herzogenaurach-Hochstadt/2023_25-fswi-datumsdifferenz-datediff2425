@@ -18,18 +18,30 @@ public class Application {
 		root = new JFrame("DateDiff");
 		root.getContentPane().setLayout(new FlowLayout(FlowLayout.LEFT,20,20));
 
+		Box mainBox = Box.createVerticalBox();
+		root.getContentPane().add(mainBox);
+
+		Box zeile1 = Box.createHorizontalBox();
+		mainBox.add(zeile1);
+		JLabel lblDate1 = new JLabel("Datum 1: ");
 		jtfDatum1 = new JTextField(6);
 		jtfDatum1.setName("Datum1");
 		jtfDatum1.getDocument().putProperty("owner", jtfDatum1);
 		jtfDatum1.getDocument().addDocumentListener(new DateCheckEventHandler());
-		root.getContentPane().add(jtfDatum1);
+		zeile1.add(lblDate1);
+		zeile1.add(jtfDatum1);
 
+		Box zeile2 = Box.createHorizontalBox();
+		mainBox.add(zeile2);
+
+		JLabel lblDate2 = new JLabel("Datum 2: ");
 		jtfDatum2 = new JTextField(6);
 		jtfDatum2.setName("Datum2");
 		jtfDatum2.setEnabled(false);
 		jtfDatum2.getDocument().putProperty("owner", jtfDatum2);
 		jtfDatum2.getDocument().addDocumentListener(new DateCheckEventHandler());
-		root.getContentPane().add(jtfDatum2);
+		zeile2.add(lblDate2);
+		zeile2.add(jtfDatum2);
 
 		JButton jButton = new JButton("berechne");
 		jButton.addActionListener(new ButtonEventHandler());
@@ -38,6 +50,10 @@ public class Application {
 
 		lblErgebnis = new JLabel("???");
 		root.getContentPane().add(lblErgebnis);
+
+		JLabel sammlung = new JLabel("Sammlung");
+
+		root.getContentPane().add(sammlung);
 
 		root.pack();
 		root.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

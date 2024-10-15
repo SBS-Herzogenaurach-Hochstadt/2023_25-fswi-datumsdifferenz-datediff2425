@@ -22,8 +22,8 @@ public class DateCheckEventHandler implements DocumentListener {
 						break;
 				}
 			}
-		} catch (BadLocationException ex) {
-			throw new RuntimeException(ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
