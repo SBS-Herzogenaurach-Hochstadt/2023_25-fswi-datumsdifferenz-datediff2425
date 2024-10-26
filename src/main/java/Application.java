@@ -64,6 +64,7 @@ public class Application {
 
 		lastTen = new Label();
 		dao = new DataAccessObject("C:/Users/cgg/Documents/data/datediff.txt");
+
 		String[][] bufLastTen = Arrays.stream(dao.findAll()).map(date -> date.split("#")).toArray(String[][]::new);
 		int countDown = 9;
 		for (int i = bufLastTen.length - 1 ; i >= 0; i--) {
@@ -100,29 +101,33 @@ public class Application {
 					lblErgebnis.setText(String.format("%d Tag", diffInDays));
 					if (counter < 10) {
 						listLastTen[counter++] = String.format("%s - %s = %d Tag", jtfDatum1.getText(), jtfDatum2.getText(), diffInDays);
-						lastTen.setText(listLastTen[counter - 1]);
-						dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tag", new Timestamp(System.currentTimeMillis()).toString()});
+						if (dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tag", new Timestamp(System.currentTimeMillis()).toString()})){
+							lastTen.setText(listLastTen[counter - 1]);
+						}
 					} else {
 						String[] buf = new String[10];
 						System.arraycopy(listLastTen,1, buf, 0, 9);
 						listLastTen = buf;
 						listLastTen[9] = String.format("%s - %s = %d Tag", jtfDatum1.getText(), jtfDatum2.getText(), diffInDays);
-						lastTen.setText(listLastTen[9]);
-						dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tag", new Timestamp(System.currentTimeMillis()).toString()});
+						if (dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tag", new Timestamp(System.currentTimeMillis()).toString()})) {
+							lastTen.setText(listLastTen[9]);
+						}
 					}
 				} else {
 					lblErgebnis.setText(String.format("%d Tage", diffInDays));
 					if (counter < 10) {
 						listLastTen[counter++] = String.format("%s - %s = %d Tage", jtfDatum1.getText(), jtfDatum2.getText(), diffInDays);
-						lastTen.setText(listLastTen[counter - 1]);
-						dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tage", new Timestamp(System.currentTimeMillis()).toString()});
+						if (dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tage", new Timestamp(System.currentTimeMillis()).toString()})) {
+							lastTen.setText(listLastTen[counter - 1]);
+						}
 					} else {
 						String[] buf = new String[10];
 						System.arraycopy(listLastTen,1, buf, 0, 9);
 						listLastTen = buf;
 						listLastTen[9] = String.format("%s - %s = %d Tage", jtfDatum1.getText(), jtfDatum2.getText(), diffInDays);
-						lastTen.setText(listLastTen[9]);
-						dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tage", new Timestamp(System.currentTimeMillis()).toString()});
+						if (dao.save(new String[]{jtfDatum1.getText(), jtfDatum2.getText(), diffInDays + " Tage", new Timestamp(System.currentTimeMillis()).toString()})) {
+							lastTen.setText(listLastTen[9]);
+						}
 					}
 				}
 				root.pack();
